@@ -1,61 +1,99 @@
-# Pay As You Learn Backend
+# Pay As You Learn
 
-Spring Boot backend for AI-powered 11+ grammar school exam question generation.
+Open-source software that uses an AI-powered engine to generate high-quality **11+ grammar school exam practice questions**.
 
-## Tech Stack
+## Mission
 
-- Java 21
-- Spring Boot (Web + Spring Data JPA)
-- Gradle
-- PostgreSQL (Docker)
-- Liquibase (schema migrations)
+Help students and families access affordable, personalized 11+ preparation by generating relevant practice material on demand.
 
-## What this repository contains
+## Target Users
 
-This repo now contains only the backend service:
+- Students preparing for UK 11+ grammar school entrance exams.
+- Parents/tutors looking for extra practice resources.
+- Educators who want customizable question sets.
 
-- REST API foundation
-- PostgreSQL containerized runtime via Docker Compose
-- Liquibase changeset-driven schema management
+## Core Problem We Solve
 
-## React UI repository
+Traditional 11+ prep can be expensive, static, and one-size-fits-all. This project aims to provide:
 
-As requested, the React frontend should live in a **separate repository**. Keep this repository focused on backend APIs and persistence.
+- Adaptive question generation by topic and difficulty.
+- Rapid creation of worksheets/mock tests.
+- Transparent, community-reviewed question quality.
 
-Suggested split:
+## MVP Scope
 
-- `pay-as-you-learn-backend` (this repo)
-- `pay-as-you-learn-ui` (separate React app repo)
+Initial milestone (MVP):
 
-## Local run flow
+1. Generate practice questions by subject area:
+   - Verbal reasoning
+   - Non-verbal reasoning
+   - Mathematics
+   - English (comprehension, grammar, vocabulary)
+2. Choose difficulty level (easy/medium/hard).
+3. Produce answer keys and short explanations.
+4. Export printable worksheets (PDF/Markdown).
+5. Save generated sets for later review.
 
-When you run the backend with Gradle:
-
-1. `composeUp` starts `postgres:16-alpine` from `docker-compose.yml`.
-2. Spring Boot starts and connects to Postgres.
-3. Liquibase applies `db/changelog/db.changelog-master.yaml` before app startup is completed.
-4. On process exit, `composeDown` is called.
-
-Run:
-
-```bash
-gradle bootRun
-```
-
-Health endpoint:
+## Proposed Repository Structure
 
 ```text
-GET http://localhost:8080/api/health
+pay-as-you-learn/
+├── README.md
+├── LICENSE
+├── .gitignore
+├── docs/
+│   ├── architecture.md
+│   ├── development.md
+│   └── roadmap.md
+├── app/
+│   ├── api/
+│   ├── engine/
+│   ├── web/
+│   └── shared/
+├── tests/
+│   ├── unit/
+│   ├── integration/
+│   └── eval/
+└── scripts/
 ```
 
-## Database migrations
+## Architecture (high-level)
 
-- Master changelog: `src/main/resources/db/changelog/db.changelog-master.yaml`
-- Initial changeset: `src/main/resources/db/changelog/changes/001-initial-schema.yaml`
+Planned core components:
 
-## Next suggested backend steps
+- **Question Generation Engine**: Builds prompts, calls LLMs, enforces response schema.
+- **Quality & Safety Layer**: Checks curriculum fit, age-appropriateness, duplication, and answer consistency.
+- **API Service**: Exposes endpoints to generate/retrieve question sets.
+- **Web App**: Lets users select subjects, difficulty, and download outputs.
+- **Evaluation Pipeline**: Tracks quality over time using rubric-based and human-in-the-loop review.
 
-1. Add JPA entities that match Liquibase tables.
-2. Add `/api/v1/questions/generate` endpoint.
-3. Integrate LLM provider abstraction.
-4. Add validation and safety checks for 11+ content.
+## Guiding Principles
+
+- **Student-first quality** over raw generation speed.
+- **Explainable outputs** (answer + reasoning where appropriate).
+- **Safety and fairness** for school-age learners.
+- **Open contribution model** with clear review standards.
+
+## Immediate Next Steps
+
+1. Decide and document initial tech stack.
+2. Build minimal API skeleton with one `/generate` endpoint.
+3. Define strict JSON schema for generated questions.
+4. Add baseline quality checks and unit tests.
+5. Publish contribution and roadmap docs.
+
+## Suggested Learning Path for New Contributors
+
+1. Read this README and `docs/roadmap.md`.
+2. Understand the data model for question objects.
+3. Explore prompt templates and validation rules.
+4. Add/extend a small quality check with tests.
+5. Submit a small PR and request review.
+
+## Contributing
+
+Contributions are welcome. Please see `CONTRIBUTING.md` once added.
+
+## License
+
+Licensed under the Apache License 2.0. See `LICENSE` for details.
