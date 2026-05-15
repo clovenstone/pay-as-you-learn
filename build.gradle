@@ -1,0 +1,46 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.5'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'com.avast.gradle.docker-compose' version '0.17.12'
+}
+
+group = 'org.payasyoulearn'
+version = '0.0.1-SNAPSHOT'
+description = 'AI-powered 11+ question generation backend'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.liquibase:liquibase-core'
+    runtimeOnly 'org.postgresql:postgresql'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'com.h2database:h2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+dockerCompose {
+    useComposeFiles = ['docker-compose.yml']
+    startedServices = ['postgres']
+    captureContainersOutput = true
+}
+
+tasks.named('bootRun') {
+    dependsOn tasks.named('composeUp')
+    finalizedBy tasks.named('composeDown')
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
